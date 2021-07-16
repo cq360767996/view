@@ -6,13 +6,13 @@
     :z-index="index"
     :style="splitStyleAndPatch(item.style)"
   >
-    <board-box :data="item" class="board-component" />
+    <BoardBox :data="item" class="board-component" />
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { Component, Page } from '@/typings';
-import { onMounted, ref, defineProps } from 'vue';
+import { onMounted, ref } from 'vue';
 import { getPage } from '@/api';
 import { splitStyleAndPatch } from '@/utils';
 import { BoardBox } from '@/components';
