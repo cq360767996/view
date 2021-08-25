@@ -1,6 +1,5 @@
 import type { Page } from '@/typings';
 import { getPages } from '@/api';
-import { message } from 'ant-design-vue';
 import { onMounted, ref } from 'vue';
 
 export const useManage = () => {
@@ -11,7 +10,7 @@ export const useManage = () => {
     if (res.code === 0) {
       pages.value = res.data;
     } else {
-      message.error('服务器异常，请稍后重试～');
+      (window as any).$message.error('服务器异常，请稍后重试～');
     }
   };
 

@@ -2,23 +2,24 @@
   <div class="login">
     <div class="login-box">
       <span>用户登录</span>
-      <Form
-        hide-required-mark
-        label-align="left"
-        :label-col="{ span: 8 }"
-        :wrapper-col="{ span: 16 }"
+      <NForm
+        show-require-mark="left"
+        label-placement="left"
+        :rules="rules"
+        :label-width="60"
+        label-align="right"
         :model="form"
       >
-        <FormItem name="name" label="用户名" :rules="rules.name">
-          <Input v-model:value="form.name" placeholder="用户名" />
-        </FormItem>
-        <FormItem name="password" label="密码" :rules="rules.password">
-          <Input v-model:value="form.password" placeholder="密码" />
-        </FormItem>
-        <FormItem :wrapper-col="{ span: 8, offset: 8 }">
-          <Button type="primary" @click="submitLogin">登录</Button>
-        </FormItem>
-      </Form>
+        <NFormItem name="name" label="用户名">
+          <NInput v-model:value="form.name" placeholder="用户名" />
+        </NFormItem>
+        <NFormItem name="password" label="密码">
+          <NInput v-model:value="form.password" placeholder="密码" />
+        </NFormItem>
+        <NFormItem>
+          <NButton type="primary" @click="submitLogin">登录</NButton>
+        </NFormItem>
+      </NForm>
     </div>
   </div>
 </template>
@@ -27,13 +28,17 @@
 import type { UserInfo } from '@/typings';
 import { reactive } from 'vue';
 import { login } from '@/api';
-import { message, Form, FormItem, Button, Input } from 'ant-design-vue';
-import { encrypt, to } from '@/utils';
+import { useMessage, NForm, NFormItem, NButton, NInput, useThemeVars } from 'naive-ui';
+import { encrypt } from '@/utils';
 import { useRouter } from 'vue-router';
 import { local } from '@/utils';
 import { LocalKeys } from '@/enum';
 
+const theme = useThemeVars();
+console.log(theme.value);
+
 const props = defineProps({ redirect: { type: String, default: () => '' } });
+const message = useMessage();
 
 const form = reactive({ name: 'ccq', password: 'a123456' });
 const rules = reactive({
@@ -41,11 +46,11 @@ const rules = reactive({
   password: [{ required: true, message: '请输入密码', trigger: 'blur' }],
 });
 const router = useRouter();
-const { validate } = Form.useForm(form, rules);
+// const { validate } = NForm.;
 
 const submitLogin = async () => {
-  const [err] = await to(validate());
-  if (err) return;
+  // const [err] = await to(validate());
+  // if (err) return;
 
   const { name, password } = form;
   const res = await login<UserInfo>({ name, password: encrypt(password) });
@@ -64,7 +69,7 @@ const submitLogin = async () => {
 <style lang="less" scoped>
 .login {
   height: 100%;
-  background-color: var(--component-bg);
+  background-color: v-bind('theme.railColor');
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,7 +77,7 @@ const submitLogin = async () => {
   &-box {
     box-sizing: border-box;
     padding: 20px;
-    background-color: var(--body-bg);
+    background-color: v-bind('theme.cardColor');
     display: flex;
     flex-direction: column;
     align-items: center;

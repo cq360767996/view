@@ -59,10 +59,10 @@
     <span :style="patchUnit(viewportSize)" @mousedown.stop="handleThumbnailMousedown"></span>
   </section>
 
-  <footer class="edit-slider">
-    <Col span="1">
-      <Tooltip>
-        <template #title>
+  <NRow>
+    <footer class="edit-slider">
+      <NCol span="1">
+        <NTooltip>
           <div class="edit-slider__text">
             <span> 切换图层面板 </span>
             <span> ctrl/cmd + &larr; </span>
@@ -75,35 +75,31 @@
             <span> 切换右侧面板 </span>
             <span> ctrl/cmd + &rarr; </span>
           </div>
-        </template>
-        <MacCommandOutlined class="edit-slider__icon" />
-      </Tooltip>
-    </Col>
-    <Col span="2">
-      <InputNumber
-        v-model:value="pageConfig.scale"
-        size="small"
-        :min="30"
-        :max="150"
-        :formatter="sliderFormatter"
-      />
-    </Col>
-    <Col span="4" class="edit-slider__col">
-      <Slider
-        v-model:value="pageConfig.scale"
-        size="small"
-        :min="30"
-        :max="150"
-        :step="10"
-        dots
-        :tip-formatter="sliderFormatter"
-        @change="handleSliderChange"
-      />
-    </Col>
-    <Col span="1" class="edit-slider__col">
-      <BlockOutlined class="edit-slider__icon" @click="switchThumbnail" />
-    </Col>
-  </footer>
+          <template #trigger>
+            <MacCommandOutlined class="edit-slider__icon" />
+          </template>
+        </NTooltip>
+      </NCol>
+      <NCol span="2">
+        <NInputNumber v-model:value="pageConfig.scale" size="small" :min="30" :max="150" />
+      </NCol>
+      <NCol span="4" class="edit-slider__col">
+        <NSlider
+          v-model:value="pageConfig.scale"
+          size="small"
+          :min="30"
+          :max="150"
+          :step="10"
+          dots
+          :tip-formatter="sliderFormatter"
+          @on-update:value="handleSliderChange"
+        />
+      </NCol>
+      <NCol span="1" class="edit-slider__col">
+        <BlockOutlined class="edit-slider__icon" @click="switchThumbnail" />
+      </NCol>
+    </footer>
+  </NRow>
 
   <BoardMenu v-if="menu.board.show" menu-type="board" :container="canvasWrapperRef" />
 </template>
@@ -126,8 +122,10 @@ import { patchUnit, splitStyleAndPatch } from '@/utils';
 import { EyeInvisibleOutlined, BlockOutlined, MacCommandOutlined } from '@ant-design/icons-vue';
 import { computed, onBeforeUpdate, onMounted, reactive, shallowRef } from 'vue';
 import { useRouter } from 'vue-router';
-import { Col, Tooltip, InputNumber, Slider } from 'ant-design-vue';
+import { NRow, NCol, NTooltip, NInputNumber, NSlider, useThemeVars } from 'naive-ui';
 
+const theme = useThemeVars();
+console.log(theme.value);
 const store = useStore();
 const { board } = store.state;
 const { selectMask, handleMousedown } = useSelectMask(store);
@@ -200,16 +198,16 @@ onMounted(() => {
 <style lang="less">
 .board {
   position: absolute;
-  background-color: var(--body-bg);
+  background-color: v-bind('theme.cardColor');
   top: 60px;
   left: 60px;
   transform-origin: 0 0;
-  transition: 0.2s all var(--ease-in-out);
+  transition: 0.2s all ease-in-out;
   background-size: cover, contain;
   background-position: center, right bottom;
   background-repeat: no-repeat, no-repeat;
-  box-shadow: var(--box-shadow-base);
-  color: var(--black);
+  box-shadow: v-bind('theme.boxShadow1');
+  color: #000;
 
   &__component {
     pointer-events: none;
@@ -218,8 +216,8 @@ onMounted(() => {
   &__mask {
     position: absolute;
     opacity: 0.5;
-    background-color: var(--primary-1);
-    border: 1px solid var(--border-color-base);
+    background-color: v-bind('theme.primaryColorHover');
+    border: 1px solid v-bind('theme.borderColor');
   }
 }
 
@@ -231,13 +229,13 @@ onMounted(() => {
 
   &:focus {
     outline: none;
-    box-shadow: var(--box-shadow-base);
+    box-shadow: v-bind('theme.boxShadow1');
   }
 }
 
 .screen-shot {
-  background-image: linear-gradient(90deg, transparent 50%, var(--body-bg) 50%),
-    linear-gradient(180deg, var(--body-bg) 50%, transparent 50%);
+  background-image: linear-gradient(90deg, transparent 50%, v-bind('theme.cardColor') 50%),
+    linear-gradient(180deg, v-bind('theme.cardColor') 50%, transparent 50%);
   background-size: 10px 10px;
 }
 
@@ -259,8 +257,8 @@ onMounted(() => {
 
 .guide-line {
   &__controller {
-    border-right: 1px solid var(--border-color-base);
-    border-bottom: 1px solid var(--border-color-base);
+    border-right: 1px solid v-bind('theme.borderColor');
+    border-bottom: 1px solid v-bind('theme.borderColor');
     width: 20px;
     height: 20px;
     font-size: 14px;
@@ -270,7 +268,7 @@ onMounted(() => {
     align-items: center;
     justify-content: center;
     display: flex;
-    background-color: var(--body-bg);
+    background-color: v-bind('theme.cardColor');
   }
 }
 
@@ -278,7 +276,7 @@ onMounted(() => {
   position: absolute;
   right: 0;
   bottom: 40px;
-  background-color: var(--component-bg);
+  background-color: v-bind('theme.tableHeaderColor');
   height: 30px;
   width: 100%;
   display: flex;
@@ -299,7 +297,7 @@ onMounted(() => {
     cursor: pointer;
 
     &:hover {
-      color: var(--text-color);
+      color: v-bind('theme.textColor2');
     }
   }
 
@@ -323,7 +321,7 @@ onMounted(() => {
   position: absolute;
   right: 5px;
   bottom: 70px;
-  transition: 0.3s transform var(--ease-in-out);
+  transition: 0.1s transform ease-in-out;
 
   &__canvas {
     width: 190px;
@@ -333,7 +331,7 @@ onMounted(() => {
 
   span {
     position: absolute;
-    outline: 1px solid var(--white);
+    outline: 1px solid #fff;
     z-index: 2;
     top: 0;
     left: 0;
@@ -345,7 +343,7 @@ onMounted(() => {
 
 .markline {
   position: absolute;
-  background-color: var(--primary-color);
+  background-color: v-bind('theme.primaryColor');
 
   width: 1px;
 
@@ -369,8 +367,8 @@ onMounted(() => {
   span {
     position: absolute;
     left: 5px;
-    background-color: var(--primary-color);
-    color: var(--white);
+    background-color: v-bind('theme.primaryColor');
+    color: #fff;
     padding: 0 3px;
   }
 }

@@ -4,7 +4,6 @@ import { cloneDeep } from 'lodash';
 import { BoardEnum } from './board';
 import config from '@/config';
 import { pageConfig } from '@/hooks';
-import { message } from 'ant-design-vue';
 
 const state: Snapshot = {
   data: [],
@@ -22,7 +21,7 @@ const mutations: Data<Mutation<Snapshot>> = {
     if (state.data.length > config.maxSnapshot) {
       state.data.shift();
     }
-    message.success('保存成功！');
+    (window as any).$message.success('保存成功！');
   },
 };
 

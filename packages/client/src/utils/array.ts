@@ -1,12 +1,7 @@
 import type { Board, ColumnConfig } from '@/typings';
 
 export const generateColumns = (columns: ColumnConfig[]) =>
-  columns.map(item => ({
-    ...item,
-    dataIndex: item.dataIndex || item.key,
-    align: 'center',
-    slots: { customRender: item.key },
-  }));
+  columns.map(item => ({ ...item, align: 'center' }));
 
 export const spliceItems = <T>(arr: T[], indexArr: number[]) => {
   const selectedItems = indexArr.map(index => arr[index]);

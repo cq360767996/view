@@ -1,13 +1,32 @@
+<template>
+  <LayoutPanel />
+</template>
+
+<script lang="ts" setup>
+import LayoutPanel from './layer-panel';
+import { useThemeVars } from 'naive-ui';
+import { watchEffect } from 'vue';
+
+const theme = useThemeVars();
+console.log(theme.value);
+
+watchEffect(() => {
+  console.log(theme.value);
+});
+</script>
+
+<style lang="less">
 .layer-panel {
   position: relative;
   width: 200px;
   height: 100%;
-  border-right: 1px solid var(--border-color-base);
-  transition: width 0.3s var(--ease-in-out);
+  border-right: 1px solid v-bind('theme.borderColor');
+  transition: width 0.3s ease-in-out;
   z-index: 4;
   overflow: hidden;
   white-space: nowrap;
-  background-color: var(--body-bg);
+  background-color: v-bind('theme.cardColor');
+  color: v-bind('theme.textColor2');
 
   .ant-empty {
     margin-top: 20px;
@@ -24,7 +43,7 @@
 
   &__header {
     height: 30px;
-    background-color: var(--heading-bg);
+    background-color: v-bind('theme.railColor');
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -41,11 +60,11 @@
       font-size: 16px;
 
       &:hover {
-        color: var(--primary-color);
+        color: v-bind('theme.primaryColor');
       }
 
       &.--active {
-        color: var(--primary-color);
+        color: v-bind('theme.primaryColor');
       }
     }
   }
@@ -61,16 +80,16 @@
     justify-content: space-between;
     box-sizing: border-box;
     padding: 0 27px;
-    border-bottom: 1px solid var(--border-color-base);
-    background-color: var(--body-bg);
+    border-bottom: 1px solid v-bind('theme.borderColor');
+    background-color: v-bind('theme.cardColor');
 
     span {
       padding: 3px;
       cursor: pointer;
 
       &:hover {
-        background-color: var(--primary-color);
-        color: var(--white);
+        background-color: v-bind('theme.hoverColor');
+        color: #fff;
       }
     }
   }
@@ -89,12 +108,11 @@
       cursor: pointer;
 
       &:hover {
-        background-color: var(--item-hover-bg);
+        background-color: v-bind('theme.hoverColor');
       }
 
       &.--active {
-        color: var(--white);
-        background-color: var(--primary-color);
+        background-color: v-bind('theme.hoverColor');
       }
     }
 
@@ -117,8 +135,8 @@
       img {
         width: 51px;
         height: 34px;
-        border: 1px solid var(--border-color-base);
-        background-color: var(--hight-contrast-bg);
+        border: 1px solid v-bind('theme.borderColor');
+        background-color: v-bind('theme.hoverColor');
       }
 
       b {
@@ -128,7 +146,7 @@
     }
 
     .--animated {
-      transition: transform 0.3s var(--ease-in-out);
+      transition: transform 0.3s ease-in-out;
     }
 
     .--icon {
@@ -140,7 +158,7 @@
 
   &__footer {
     height: 30px;
-    border-top: 1px solid var(--border-color-base);
+    border-top: 1px solid v-bind('theme.borderColor');
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -152,14 +170,15 @@
       cursor: pointer;
 
       &:hover {
-        background-color: var(--primary-color);
-        color: var(--white);
+        background-color: v-bind('theme.primaryColor');
+        color: #fff;
       }
     }
 
     .--icon {
-      background-color: var(--primary-color);
-      color: var(--text-color-inverse);
+      background-color: v-bind('theme.primaryColor');
+      color: v-bind('theme.textColor2');
     }
   }
 }
+</style>

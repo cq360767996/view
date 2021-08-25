@@ -32,6 +32,10 @@ import { on, off, patchUnit } from '@/utils';
 import { throttle } from 'lodash';
 import { computed } from 'vue';
 import { RedoOutlined } from '@ant-design/icons-vue';
+import { useThemeVars } from 'naive-ui';
+
+const theme = useThemeVars();
+console.log(theme.value);
 
 const props = defineProps({
   index: { type: Number, default: () => 0 },
@@ -222,7 +226,7 @@ const handleMousedownOnRotate = (e: MouseEvent) => {
   box-sizing: border-box;
 
   &:hover {
-    outline: 1px dashed var(--outline-color);
+    outline: 1px dashed v-bind('theme.primaryColor');
   }
 
   & > *:first-child {
@@ -237,7 +241,7 @@ const handleMousedownOnRotate = (e: MouseEvent) => {
 
   .shape-rotate {
     position: absolute;
-    color: var(--primary-color);
+    color: v-bind('theme.primaryColor');
     top: -30px;
     left: 50%;
     transform: translateX(-50%);
@@ -249,7 +253,7 @@ const handleMousedownOnRotate = (e: MouseEvent) => {
   }
 
   &.--active {
-    outline: 1px solid var(--outline-color);
+    outline: 1px solid v-bind('theme.primaryColor');
   }
 
   &__graticule {
@@ -257,12 +261,12 @@ const handleMousedownOnRotate = (e: MouseEvent) => {
 
     &.--x {
       top: -1px;
-      border-top: 1px solid var(--primary-color);
+      border-top: 1px solid v-bind('theme.primaryColor');
       height: 0;
     }
     &.--y {
       left: -1px;
-      border-left: 1px solid var(--primary-color);
+      border-left: 1px solid v-bind('theme.primaryColor');
       width: 0;
     }
   }
@@ -273,7 +277,7 @@ const handleMousedownOnRotate = (e: MouseEvent) => {
     left: -5px;
     font-size: 16px;
     font-weight: bold;
-    color: var(--primary-color);
+    color: v-bind('theme.primaryColor');
     transform: translate(-100%, -100%);
   }
 
@@ -281,10 +285,10 @@ const handleMousedownOnRotate = (e: MouseEvent) => {
     position: absolute;
     width: @radius * 2;
     height: @radius * 2;
-    border: 1px solid var(--primary-color);
+    border: 1px solid v-bind('theme.primaryColor');
     box-sizing: border-box;
     border-radius: 50%;
-    background-color: var(--white);
+    background-color: #fff;
     z-index: 1;
   }
 

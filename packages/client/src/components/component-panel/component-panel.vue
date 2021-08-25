@@ -9,35 +9,38 @@
       <LeftOutlined @click="panel.component = !panel.component" />
     </header>
     <div class="component-panel__select-box">
-      <InputSearch
+      <NInput
         v-show="panel.component"
         enter-button
         placeholder="请输入组件名"
         @search="searchComponent"
       />
     </div>
-    <Tabs v-model:activeKey="activeTab" tab-position="left">
-      <TabPane v-for="tab in galleryGroup" :key="tab.groupName">
-        <template #tab>
-          <div class="component-panel__label">
-            <component :is="tab.icon" />
-            <span>{{ tab.groupName }}</span>
-          </div>
-        </template>
-        <ul class="component-panel__list">
-          <li
-            v-for="item in tab.list"
-            :key="item.type"
-            draggable="true"
-            class="component-panel__item"
-            :data-type="item.type"
-          >
-            <header>{{ item.name }}</header>
-            <img :src="getImgSrc(item.type)" />
-          </li>
-        </ul>
-      </TabPane>
-    </Tabs>
+    <div class="component-panel__tabs">
+      <ul class="component-panel__tab">
+        <li
+          v-for="(item, i) in galleryGroup"
+          :key="item.groupName"
+          :class="{ '--active': i === activeTab }"
+          @click="activeTab = i"
+        >
+          <div><component :is="item.icon" /></div>
+          <div>{{ item.groupName }}</div>
+        </li>
+      </ul>
+      <ul class="component-panel__list">
+        <li
+          v-for="item in galleryGroup[activeTab].list"
+          :key="item.type"
+          draggable="true"
+          class="component-panel__item"
+          :data-type="item.type"
+        >
+          <header>{{ item.name }}</header>
+          <img :src="getImgSrc(item.type)" />
+        </li>
+      </ul>
+    </div>
   </section>
 </template>
 
@@ -47,9 +50,12 @@ import { ref } from 'vue';
 import { LeftOutlined } from '@ant-design/icons-vue';
 import { panel } from '@/hooks';
 import DefaultIcon from '@/assets/img/gallery/default.png';
-import { InputSearch, Tabs, TabPane } from 'ant-design-vue';
+import { NInput, useThemeVars } from 'naive-ui';
 
-const activeTab = ref('基础');
+const activeTab = ref(0);
+
+const theme = useThemeVars();
+console.log(theme.value);
 
 const handleDragStart = (e: DragEvent) => {
   const target = e.target as HTMLDataListElement;
@@ -83,10 +89,11 @@ const getImgSrc = (type?: string) => {
   flex-shrink: 0;
   box-sizing: border-box;
   z-index: 4;
-  background-color: var(--body-bg);
-  transition: width 0.3s var(--ease-in-out);
+  background-color: v-bind('theme.cardColor');
+  transition: width 0.3s ease-in-out;
   white-space: nowrap;
-  border-right: 1px solid var(--border-color-base);
+  border-right: 1px solid v-bind('theme.borderColor');
+  color: v-bind('theme.textColor2');
 
   &--hide {
     width: 0;
@@ -95,7 +102,7 @@ const getImgSrc = (type?: string) => {
 
   &__header {
     height: 30px;
-    background-color: var(--heading-bg);
+    background-color: v-bind('theme.railColor');
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -112,12 +119,14 @@ const getImgSrc = (type?: string) => {
   }
 
   &__list {
-    height: calc(100% - 30px);
+    flex: 1;
     box-sizing: border-box;
     padding: 5px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    display: grid;
+    justify-content: start;
+    align-content: start;
+    grid-template-columns: repeat(2, 1fr);
+    grid-gap: 10px 6px;
     margin-bottom: 0;
     overflow: auto;
   }
@@ -125,21 +134,20 @@ const getImgSrc = (type?: string) => {
   &__item {
     width: 80px;
     height: 80px;
-    margin-bottom: 6px;
     cursor: pointer;
 
     header {
       height: 22px;
       box-sizing: border-box;
       padding: 0 5px;
-      background-color: var(--heading-bg);
+      background-color: v-bind('theme.tableHeaderColor');
       text-align: center;
-      border-bottom: 1px solid var(--border-color-base);
+      border-bottom: 1px solid v-bind('theme.borderColor');
     }
 
     img {
       width: 100%;
-      background-color: var(--background-color-light);
+      background-color: v-bind('theme.bodyColor');
       pointer-events: none;
       height: calc(100% - 22px);
     }
@@ -154,6 +162,27 @@ const getImgSrc = (type?: string) => {
     span {
       margin-top: 6px;
       font-size: 16px;
+    }
+  }
+
+  &__tabs {
+    display: flex;
+    height: calc(100% - 30px);
+  }
+
+  &__tab {
+    width: 50px;
+    border-right: 1px solid v-bind('theme.borderColor');
+
+    li {
+      height: 60px;
+      text-align: center;
+      cursor: pointer;
+
+      &:hover,
+      &.--active {
+        color: v-bind('theme.primaryColor');
+      }
     }
   }
 }

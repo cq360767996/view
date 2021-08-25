@@ -2,15 +2,9 @@
   <div class="page-config">
     <header class="page-config__header">页面设置</header>
     <section class="page-config__wrapper">
-      <Form
-        :model="pageConfig"
-        hide-required-mark
-        label-align="right"
-        :label-col="{ span: 5, offset: 2 }"
-        :wrapper-col="{ span: 16, offset: 1 }"
-      >
+      <NForm :model="pageConfig" hide-required-mark label-placement="left" :label-width="80">
         <Item v-for="field in fields" :key="field.label" :field="field" :model="pageConfig" />
-      </Form>
+      </NForm>
     </section>
   </div>
 </template>
@@ -27,7 +21,10 @@ import {
   StopOutlined,
 } from '@ant-design/icons-vue';
 import { FormItem as Item } from '@/components';
-import { Form } from 'ant-design-vue';
+import { NForm, useThemeVars } from 'naive-ui';
+
+const theme = useThemeVars();
+console.log(theme.value);
 
 const fields: Array<Field> = [
   {
@@ -82,7 +79,7 @@ const fields: Array<Field> = [
     height: 30px;
     line-height: 30px;
     text-align: center;
-    background-color: var(--heading-bg);
+    background-color: v-bind('theme.railColor');
   }
 
   &__wrapper {

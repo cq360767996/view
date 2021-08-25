@@ -3,7 +3,6 @@ import { shallowReactive, toRaw } from 'vue';
 import { addPage, updatePage } from '@/api';
 import { Store } from 'vuex';
 import { cloneDeep } from 'lodash';
-import { message } from 'ant-design-vue';
 import config from '@/config';
 import { Router } from 'vue-router';
 
@@ -32,7 +31,7 @@ const updateCachePage = (store: Store<RootStateType>) => {
 const savePage = async (store: Store<RootStateType>, router: Router) => {
   const { board } = store.state;
   if (board.data.length === 0) {
-    message.error('尚未添加任何组件！');
+    (window as any).$message.error('尚未添加任何组件！');
     return;
   }
   // TODO: 校验表单
@@ -42,13 +41,13 @@ const savePage = async (store: Store<RootStateType>, router: Router) => {
   if (_id) {
     const res = await updatePage(toRaw(page));
     if (res.code === 0) {
-      message.success('保存成功！');
+      (window as any).$message.success('保存成功！');
       updateCachePage(store);
     }
   } else {
     const res = await addPage<Page>({ ...resConfig });
     if (res.code === 0) {
-      message.success('创建成功！');
+      (window as any).$message.success('创建成功！');
       pageConfig._id = res.data._id;
       updateCachePage(store);
       router.push(`/editor/${res.data._id}`);

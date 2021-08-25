@@ -1,41 +1,49 @@
 <template>
-  <Layout class="container">
-    <LayoutSider v-model:collapsed="collapsed" :trigger="null" collapsible>
+  <NLayout class="container" has-sider>
+    <NLayoutSider v-model:collapsed="collapsed" :trigger="null" collapsible>
       <div class="logo">
         <img width="40" height="40" src="/src/assets/img/logo.svg" />
       </div>
-      <Menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-        <MenuItem
-          v-for="item in routeList"
-          :key="item.key"
-          @click="$router.push({ name: item.key })"
-        >
-          <component :is="item.icon" />
-          <span>{{ item.name }}</span>
-        </MenuItem>
-      </Menu>
-    </LayoutSider>
+      <NMenu
+        v-model:collapsed="collapsed"
+        v-model:value="selectedKeys"
+        :options="routeList"
+      ></NMenu>
+    </NLayoutSider>
     <div class="main">
-      <LayoutHeader class="layout-header">
+      <NLayoutHeader class="layout-header">
         <MenuUnfoldOutlined v-if="collapsed" class="trigger" @click="collapsed = !collapsed" />
         <MenuFoldOutlined v-else class="trigger" @click="collapsed = !collapsed" />
         <ExitDropdown />
-      </LayoutHeader>
-      <LayoutContent class="layout-content">
+      </NLayoutHeader>
+      <NLayoutContent class="layout-content">
         <RouterView />
-      </LayoutContent>
+      </NLayoutContent>
     </div>
-  </Layout>
+  </NLayout>
 </template>
 <script lang="ts" setup>
 import { MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue';
 import { ExitDropdown } from '@/components';
 import { ref } from 'vue';
 import { routeList } from '@/router';
-import { Layout, LayoutSider, Menu, MenuItem, LayoutHeader, LayoutContent } from 'ant-design-vue';
+import {
+  NLayout,
+  NLayoutSider,
+  NMenu,
+  NLayoutHeader,
+  NLayoutContent,
+  useMessage,
+  useThemeVars,
+} from 'naive-ui';
 
-const selectedKeys = ref(['page']);
+const theme = useThemeVars();
+console.log(theme.value);
+const selectedKeys = ref('page');
 const collapsed = ref(false);
+const message = useMessage();
+
+(window as any).$message = message;
 </script>
 
 <style lang="less" scoped>
@@ -48,11 +56,11 @@ const collapsed = ref(false);
   display: flex;
   flex-direction: column;
   flex: 1;
-  background-color: var(--component-bg);
+  background-color: v-bind('theme.cardColor');
 }
 
 .logo {
-  color: var(--text-color);
+  color: v-bind('theme.textColor2');
   display: flex;
   justify-content: center;
   align-items: center;
@@ -60,18 +68,18 @@ const collapsed = ref(false);
 }
 
 .layout-header {
-  background: var(--body-bg);
+  background: v-bind('theme.cardColor');
   padding: 10px;
   font-size: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--text-color);
+  color: v-bind('theme.textColor2');
 }
 
 .layout-content {
   flex: 1;
-  background: var(--body-bg);
+  background: v-bind('theme.cardColor');
   margin: 24px 16px;
   padding: 24px;
   min-height: 280px;

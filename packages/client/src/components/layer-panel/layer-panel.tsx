@@ -18,9 +18,8 @@ import { computed, reactive, ref, defineComponent, shallowRef } from 'vue';
 import { BoardEnum, useStore } from '@/store';
 import { BoardMenu } from '@/components';
 import { judgeCancelGroupDisabled, judgeGroupDisabled } from '@/utils';
-import { Tooltip, Empty } from 'ant-design-vue';
+import { NTooltip, NEmpty } from 'naive-ui';
 import Logo from '@/assets/img/logo.svg';
-import './layer-panel.less';
 
 export default defineComponent({
   name: 'layer-panel',
@@ -152,16 +151,24 @@ export default defineComponent({
         <section class="layer-panel__wrapper">
           <header class="layer-panel__toolbar">
             {moveActions.map(Item => (
-              <Tooltip key={Item.icon.name} placement="bottom" title={Item.tip}>
-                <Item.icon
-                  onClick={Item.event}
-                  class={board.selected.length === 0 && '--disable'}
-                />
-              </Tooltip>
+              <NTooltip
+                key={Item.icon.name}
+                placement="bottom"
+                v-slots={{
+                  trigger: (
+                    <Item.icon
+                      onClick={Item.event}
+                      class={board.selected.length === 0 && '--disable'}
+                    />
+                  ),
+                }}
+              >
+                {Item.tip}
+              </NTooltip>
             ))}
           </header>
           {board.data.length === 0 ? (
-            <Empty description="尚未添加任何组件" />
+            <NEmpty description="尚未添加任何组件" />
           ) : (
             <ul class="layer-panel__box">
               {board.data.map((item, index) => {
@@ -228,13 +235,21 @@ export default defineComponent({
             const action = operationActions.value[i];
 
             return (
-              <Tooltip key={Item.icon.name} placement="bottom" title={Item.tip}>
-                <Item.icon
-                  key={Item.icon.name}
-                  onClick={action?.disable ? undefined : Item.event}
-                  class={action?.disable && '--disable'}
-                />
-              </Tooltip>
+              <NTooltip
+                key={Item.icon.name}
+                placement="bottom"
+                v-slots={{
+                  trigger: (
+                    <Item.icon
+                      key={Item.icon.name}
+                      onClick={action?.disable ? undefined : Item.event}
+                      class={action?.disable && '--disable'}
+                    />
+                  ),
+                }}
+              >
+                {Item.tip}
+              </NTooltip>
             );
           })}
         </footer>

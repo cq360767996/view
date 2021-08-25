@@ -4,11 +4,14 @@
 
 <script lang="ts" setup>
 import { nextTick, onMounted, ref, shallowRef, watchEffect } from 'vue';
-import { wrapScale, theme } from '@/hooks';
+import { wrapScale, theme as themeName } from '@/hooks';
 import { getCurrentCSSVar } from '@/utils';
+import { useThemeVars } from 'naive-ui';
 
 const canvas = shallowRef<HTMLCanvasElement>();
 const color = ref<string>('');
+const theme = useThemeVars();
+console.log(theme.value);
 
 const reRenderCanvas = () => {
   if (!canvas.value) return;
@@ -46,7 +49,7 @@ onMounted(() => {
   nextTick(reRenderCanvas);
 
   watchEffect(() => {
-    if (theme.value) {
+    if (themeName.value) {
       color.value = getCurrentCSSVar('--text-color');
       reRenderCanvas();
     }
@@ -56,7 +59,7 @@ onMounted(() => {
 
 <style lang="less">
 .board-ruler {
-  background-color: var(--hight-contrast-bg);
+  background-color: v-bind('theme.hoverColor');
   height: 20px;
 }
 </style>

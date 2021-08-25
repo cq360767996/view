@@ -1,79 +1,83 @@
 <template>
   <div class="data-panel">
     <div class="timeline-wrapper">
-      <Timeline>
-        <TimelineItem
+      <NTimeline>
+        <NTimelineItem
           v-for="item in timeline"
           :key="item.text"
           :color="item.actived ? 'blue' : 'gray'"
         >
           <div class="timeline-wrapper__item">
             <span>{{ item.text }}</span>
-            <Button v-if="item.btnText" type="primary" size="small" @click="item.event">
+            <NButton v-if="item.btnText" type="primary" size="small" @click="item.event">
               {{ item.btnText }}
-            </Button>
+            </NButton>
             <ReloadOutlined v-else @click="item.event" />
           </div>
-        </TimelineItem>
-      </Timeline>
+        </NTimelineItem>
+      </NTimeline>
     </div>
     <CodeMirror v-model:viewer="viewer" v-model:doc="dataStringify" class="code-box" readonly />
-    <Table :data-source="table.data" :columns="table.columns" :pagination="false" />
-    <Drawer
+    <NTable :data-source="table.data" :columns="table.columns" :pagination="false" />
+    <NDrawer
       v-if="curComponent.data"
-      v-model:visible="drawer.show"
+      v-model:show="drawer.show"
       placement="right"
       title="设置数据源"
       :width="400"
       @close="refreshData"
     >
-      <Form label-align="right" :label-col="{ span: 6 }" :wrapper-col="{ span: 17, offset: 1 }">
-        <FormItem label="数据源类型">
-          <Row justify="space-between">
-            <Col>
-              <Select v-model:value="curComponent.data.type" size="small">
-                <SelectOption v-for="item in drawer.options" :key="item.value" :value="item.value">
+      <NForm label-placement="left" :label-width="80">
+        <NFormItem label="数据源类型">
+          <NRow justify="space-between">
+            <NCol>
+              <NSelect
+                v-model:value="curComponent.data.type"
+                :options="drawer.options"
+                size="small"
+              >
+                <!-- <SelectOption v-for="item in drawer.options" :key="item.value" :value="item.value">
                   {{ item.label }}
-                </SelectOption>
-              </Select>
-            </Col>
-            <Col offset="2">
-              <Button type="primary" size="small" @click="fetchData"> 更新数据 </Button>
-            </Col>
-          </Row>
-        </FormItem>
-        <FormItem label="开启过滤器">
-          <Row justify="space-between">
-            <Col>
-              <Switch v-model:checked="drawer.openFilter" @change="handleFilterChange" />
-            </Col>
-            <Col offset="2">
-              <Button type="primary" size="small" @click="modal.show = true">设置过滤器</Button>
-            </Col>
-          </Row>
-        </FormItem>
-        <FormItem v-if="curComponent.data.type === 'url'" label="接口地址">
-          <Input v-model:value="curComponent.data.url" size="small" />
-        </FormItem>
+                </SelectOption> -->
+              </NSelect>
+            </NCol>
+            <NCol offset="2">
+              <NButton type="primary" size="small" @click="fetchData"> 更新数据 </NButton>
+            </NCol>
+          </NRow>
+        </NFormItem>
+        <NFormItem label="开启过滤器">
+          <NRow justify="space-between">
+            <NCol>
+              <NSwitch v-model:checked="drawer.openFilter" @change="handleFilterChange" />
+            </NCol>
+            <NCol offset="2">
+              <NButton type="primary" size="small" @click="modal.show = true">设置过滤器</NButton>
+            </NCol>
+          </NRow>
+        </NFormItem>
+        <NFormItem v-if="curComponent.data.type === 'url'" label="接口地址">
+          <NInput v-model:value="curComponent.data.url" size="small" />
+        </NFormItem>
         <CodeMirror
           v-if="curComponent.data.type === 'static'"
           v-model:viewer="drawer.viewer"
           v-model:doc="dataStringify"
         />
-      </Form>
-      <Divider />
-      <Table :data-source="table.data" :columns="table.columns" :pagination="false" />
-      <Divider orientation="right"> 响应结果 <ReloadOutlined @click="fetchData" /> </Divider>
+      </NForm>
+      <NDivider />
+      <NTable :data-source="table.data" :columns="table.columns" :pagination="false" />
+      <NDivider orientation="right"> 响应结果 <ReloadOutlined @click="fetchData" /> </NDivider>
       <CodeMirror v-model:viewer="viewer" v-model:doc="dataStringify" readonly />
-    </Drawer>
-    <Modal
+    </NDrawer>
+    <NModal
       v-model:visible="modal.show"
       title="过滤器"
       :z-index="1001"
       @ok="handleFilterChange(true)"
     >
       <CodeMirror v-model:viewer="modal.viewer" v-model:doc="modal.doc" type="javascript" />
-    </Modal>
+    </NModal>
   </div>
 </template>
 
@@ -90,23 +94,25 @@ import json from 'json5';
 import { useDrawer } from '@/hooks';
 import { DataSource } from '@/config';
 import {
-  Timeline,
-  TimelineItem,
-  Drawer,
-  Modal,
-  Form,
-  FormItem,
-  Row,
-  Col,
-  Select,
-  SelectOption,
-  Button,
-  Switch,
-  Divider,
-  Table,
-  Input,
-} from 'ant-design-vue';
+  NTimeline,
+  NTimelineItem,
+  NDrawer,
+  NModal,
+  NForm,
+  NFormItem,
+  NRow,
+  NCol,
+  NSelect,
+  NButton,
+  NSwitch,
+  NDivider,
+  NTable,
+  NInput,
+  useThemeVars,
+} from 'naive-ui';
 
+const theme = useThemeVars();
+console.log(theme.value);
 const store = useStore();
 const { board } = store.state;
 const viewer = shallowRef<EditorView>();
@@ -211,7 +217,7 @@ onMounted(() => {
 
 <style lang="less">
 .data-panel {
-  background-color: var(--body-bg);
+  background-color: v-bind('theme.cardColor');
 
   &__drawer {
     &-row {
@@ -248,6 +254,6 @@ onMounted(() => {
 }
 
 .ant-drawer-body .ant-divider-inner-text span:hover {
-  color: var(--primary-color);
+  color: v-bind('theme.primaryColor');
 }
 </style>

@@ -1,18 +1,18 @@
 <template>
   <ColorPicker v-if="field.type === FormEnum.COLOR_PICKER" v-model="model[field.model]" />
   <template v-else-if="field.type === FormEnum.BTN_GROUP">
-    <Tooltip v-for="item in field.data" :key="item.icon" :title="item.tip" placement="bottom">
-      <Button
+    <NTooltip v-for="item in field.data" :key="item.icon" :title="item.tip" placement="bottom">
+      <NButton
         class="form-generator__btn"
         size="small"
         :type="model[field.model] === item.value ? 'primary' : 'default'"
         @click="model[field.model] = item.value"
       >
         <component :is="item.icon" />
-      </Button>
-    </Tooltip>
+      </NButton>
+    </NTooltip>
   </template>
-  <Switch
+  <NSwitch
     v-else-if="field.type === FormEnum.SWITCH"
     v-model:checked="model[field.model]"
     v-bind="field.propsData"
@@ -24,14 +24,15 @@
     v-model:value="model[field.model]"
     v-bind="field.propsData"
     allow-clear
+    :options="field.data"
     :placeholder="field.type === FormEnum.SELECT ? '请选择' : '请输入'"
     size="small"
   >
-    <template v-if="field.type === FormEnum.SELECT">
+    <!-- <template v-if="field.type === FormEnum.SELECT">
       <SelectOption v-for="option in field.data" :key="option.id" :value="option.id">
         {{ option.label }}
       </SelectOption>
-    </template>
+    </template> -->
   </component>
 </template>
 
@@ -41,29 +42,27 @@ import type { PropType } from 'vue';
 import { ColorPicker } from '../color-picker';
 import { FormEnum } from '@/enum';
 import {
-  Tooltip,
-  Button,
-  Switch,
-  Select,
-  SelectOption,
-  Input,
-  InputNumber,
-  Checkbox,
-  Slider,
-  Radio,
-  Textarea,
-} from 'ant-design-vue';
+  NTooltip,
+  NButton,
+  NSwitch,
+  NSelect,
+  NInput,
+  NInputNumber,
+  NCheckbox,
+  NSlider,
+  NRadio,
+} from 'naive-ui';
 
 const map: Data = {
-  radio: Radio,
-  checkbox: Checkbox,
-  input: Input,
-  select: Select,
-  switch: Switch,
-  slider: Slider,
-  'input-number': InputNumber,
+  radio: NRadio,
+  checkbox: NCheckbox,
+  input: NInput,
+  select: NSelect,
+  switch: NSwitch,
+  slider: NSlider,
+  'input-number': NInputNumber,
   'color-picker': ColorPicker,
-  textarea: Textarea,
+  textarea: NInput,
 };
 
 defineProps({

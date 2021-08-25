@@ -1,25 +1,17 @@
 <template>
-  <Table bordered size="small" :data-source="pages" :columns="columns" row-key="_id">
-    <template #width="{ text }"> {{ text }}px </template>
-    <template #height="{ text }"> {{ text }}px </template>
-    <template #action="{ record }">
-      <a @click="toEdit(record._id)">查看</a>
-      <Divider type="vertical" />
-      <a @click="handleDelete(record._id)">删除</a>
-    </template>
-  </Table>
+  <NDataTable bordered size="small" :data="pages" :columns="columns"></NDataTable>
 </template>
-<script lang="ts" setup>
+<script lang="tsx" setup>
 import { useRouter } from 'vue-router';
 import { useManage } from '@/hooks';
-import { generateColumns } from '@/utils';
 import { deletePage } from '@/api';
-import { message, Divider, Table } from 'ant-design-vue';
+import { NDivider, NDataTable, useMessage, DataTableColumn, NButton } from 'naive-ui';
 
 const { pages, getAllPage } = useManage();
 const router = useRouter();
+const message = useMessage();
 
-const columns = generateColumns([
+const columns: DataTableColumn[] = [
   {
     title: '作者',
     key: 'author',
@@ -39,22 +31,35 @@ const columns = generateColumns([
   {
     title: '宽',
     key: 'width',
+    render: row => `${row.width}px`,
   },
   {
     title: '高',
     key: 'height',
+    render: row => `${row.width}px`,
   },
   {
     title: '操作',
     key: 'action',
+    render: row => (
+      <>
+        <NButton type="primary" size="tiny" onClick={() => toEdit(row._id as string)}>
+          查看
+        </NButton>
+        <NDivider vertical />
+        <NButton type="primary" size="tiny" onClick={() => handleDelete(row._id as string)}>
+          删除
+        </NButton>
+      </>
+    ),
   },
-]);
+];
 
-const toEdit = (id: string) => {
+function toEdit(id: string) {
   router.push({ path: `/editor/${id}`, params: { id } });
-};
+}
 
-const handleDelete = async (id: string) => {
+async function handleDelete(id: string) {
   const res = await deletePage(id);
   if (res.code === 0) {
     message.success('删除成功。');
@@ -62,5 +67,5 @@ const handleDelete = async (id: string) => {
   } else {
     message.error('删除失败，请稍后重试～');
   }
-};
+}
 </script>

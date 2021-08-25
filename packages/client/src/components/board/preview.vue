@@ -31,12 +31,16 @@ import { useStore } from '@/store';
 import { CloseSquareOutlined } from '@ant-design/icons-vue';
 import { splitStyleAndPatch, patchUnit } from '@/utils';
 import BoardBox from './box.vue';
+import { useThemeVars } from 'naive-ui';
 
 defineProps({ modelValue: Boolean });
 
 const emit = defineEmits(['update:modelValue']);
 
 const store = useStore();
+
+const theme = useThemeVars();
+console.log(theme.value);
 
 const { board } = store.state;
 
@@ -70,7 +74,7 @@ const handleClose = () => {
     max-width: 80vw;
     max-height: 80vh;
     overflow: hidden;
-    color: var(--black);
+    color: #000;
     display: flex;
     flex-direction: column;
   }
@@ -80,9 +84,9 @@ const handleClose = () => {
     height: 50px;
     line-height: 50px;
     text-align: center;
-    background-color: var(--heading-bg);
-    color: var(--text-color);
-    border-bottom: 1px solid var(--border-color-base);
+    background-color: v-bind('theme.railColor');
+    color: v-bind('theme.textColor2');
+    border-bottom: 1px solid v-bind('theme.borderColor');
   }
 
   &__close {
@@ -93,7 +97,7 @@ const handleClose = () => {
     cursor: pointer;
 
     &:hover {
-      color: var(--primary-color);
+      color: v-bind('theme.primaryColor');
     }
   }
 

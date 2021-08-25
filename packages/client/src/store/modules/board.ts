@@ -2,7 +2,6 @@ import type { Board, Component, CSSStyleDataWithSize, Data, RootStateType } from
 import { Module, Mutation, Action } from 'vuex';
 import { cloneDeep } from 'lodash';
 import { getGallery } from '@/gallery';
-import { message } from 'ant-design-vue';
 import config from '@/config';
 import { useEchartsResize } from '@/hooks';
 import { nextTick } from 'vue';
@@ -118,7 +117,7 @@ const actions: Data<Action<Board, RootStateType>> = {
   del({ state, commit }) {
     if (state.selected.length > 0) {
       commit('del');
-      message.success('删除成功！');
+      (window as any).$message.success('删除成功！');
     }
   },
   cancelSelected({ commit }) {
@@ -156,9 +155,9 @@ const actions: Data<Action<Board, RootStateType>> = {
     if (selected.length === 0) {
       return;
     } else if (selected.length > 1) {
-      message.error('多选无法移动');
+      (window as any).$message.error('多选无法移动');
     } else if (selected[0] === len - 1) {
-      message.error('已经是最顶层！');
+      (window as any).$message.error('已经是最顶层！');
     } else {
       const exchangeIndex = moveTop ? len - 1 : selected[0] + 1;
       [data[selected[0]], data[exchangeIndex]] = [data[exchangeIndex], data[selected[0]]];
@@ -169,9 +168,9 @@ const actions: Data<Action<Board, RootStateType>> = {
     if (selected.length === 0) {
       return;
     } else if (selected.length > 1) {
-      message.error('多选无法移动');
+      (window as any).$message.error('多选无法移动');
     } else if (selected[0] === 0) {
-      message.error('已经是最底层！');
+      (window as any).$message.error('已经是最底层！');
     } else {
       const exchangeIndex = moveBottom ? 0 : selected[0] - 1;
       [data[selected[0]], data[exchangeIndex]] = [data[exchangeIndex], data[selected[0]]];

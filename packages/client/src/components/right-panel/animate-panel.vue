@@ -1,47 +1,47 @@
 <template>
   <div class="animation-btn_group">
-    <Button type="primary" @click="drawer.show = true">
+    <NButton type="primary" @click="drawer.show = true">
       <template #icon><PlusOutlined /></template>
       添加
-    </Button>
-    <Button type="primary" @click="playAll(boardRefs[board.selected[0]])">
+    </NButton>
+    <NButton type="primary" @click="playAll(boardRefs[board.selected[0]])">
       <template #icon><PlayCircleOutlined /></template>
       预览
-    </Button>
+    </NButton>
   </div>
-  <Collapse v-if="curComponent.animations?.length" v-model="active" accordion>
-    <CollapsePanel v-for="(animation, i) in curComponent.animations" :key="animation.id">
+  <NCollapse v-if="curComponent.animations?.length" v-model="active" accordion>
+    <NCollapseItem v-for="(animation, i) in curComponent.animations" :key="animation.id">
       <template #header>
         <div class="animation-title">
           <span class="animation-title__left">{{ animation.label }}</span>
           <div class="animation-title__right">
-            <Button size="small" type="primary" @click.stop="play(i, boardRefs[board.selected[0]])">
+            <NButton
+              size="small"
+              type="primary"
+              @click.stop="play(i, boardRefs[board.selected[0]])"
+            >
               <template #icon><PlayCircleOutlined /></template>
-            </Button>
-            <Button size="small" type="primary" @click.stop="del(i)">
+            </NButton>
+            <NButton size="small" type="primary" @click.stop="del(i)">
               <template #icon><DeleteOutlined /></template>
-            </Button>
+            </NButton>
           </div>
         </div>
       </template>
-      <Form
-        label-align="right"
-        :label-col="{ span: 5, offset: 2 }"
-        :wrapper-col="{ span: 16, offset: 1 }"
-      >
+      <NForm label-align="right" label-placement="left" :label-width="80">
         <Item
           v-for="field in fields"
           :key="field.label"
           :field="field"
           :model="curComponent.animations[i]"
         />
-      </Form>
-    </CollapsePanel>
-  </Collapse>
-  <Empty v-else description="尚未选择任何动画" />
-  <Drawer v-model:visible="drawer.show" placement="right" :width="400" :closable="false">
-    <Tabs v-model="drawer.selected" size="small">
-      <TabPane v-for="item in drawer.data" :key="item.title" :label="item.title">
+      </NForm>
+    </NCollapseItem>
+  </NCollapse>
+  <NEmpty v-else description="尚未选择任何动画" />
+  <NDrawer v-model:show="drawer.show" placement="right" :width="400" :closable="false">
+    <NTabs v-model="drawer.selected" size="small">
+      <NTabPane v-for="item in drawer.data" :key="item.title" :name="item.title">
         <template #tab>{{ item.title }}</template>
         <ul class="animation-box">
           <li
@@ -56,9 +56,9 @@
             {{ animation.label }}
           </li>
         </ul>
-      </TabPane>
-    </Tabs>
-  </Drawer>
+      </NTabPane>
+    </NTabs>
+  </NDrawer>
 </template>
 
 <script lang="ts" setup>
@@ -70,18 +70,21 @@ import { PlusOutlined, PlayCircleOutlined, DeleteOutlined } from '@ant-design/ic
 import { FormItem as Item } from '@/components';
 import { FormEnum } from '@/enum';
 import {
-  Button,
-  Collapse,
-  CollapsePanel,
-  Empty,
-  Drawer,
-  Tabs,
-  TabPane,
-  Form,
-} from 'ant-design-vue';
+  NButton,
+  NCollapse,
+  NCollapseItem,
+  NEmpty,
+  NDrawer,
+  NTabs,
+  NTabPane,
+  NForm,
+  useThemeVars,
+} from 'naive-ui';
 
 const active = ref('');
 
+const theme = useThemeVars();
+console.log(theme.value);
 const store = useStore();
 const { board } = store.state;
 
@@ -153,7 +156,7 @@ const del = (index: number) => {
         height: 0;
         border-left: 20px solid transparent;
         border-right: 20px solid transparent;
-        border-bottom: 40px solid var(--primary-color);
+        border-bottom: 40px solid v-bind('theme.primaryColor');
         margin-bottom: 10px;
       }
     }

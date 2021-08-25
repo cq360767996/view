@@ -12,6 +12,10 @@ import { javascriptLanguage } from '@codemirror/lang-javascript';
 import { onMounted, watchEffect, shallowRef } from 'vue';
 import { format } from 'prettier/standalone';
 import parserBabel from 'prettier/parser-babel';
+import { useThemeVars } from 'naive-ui';
+
+const theme = useThemeVars();
+console.log(theme.value);
 
 const props = defineProps({
   viewer: {
@@ -64,7 +68,7 @@ onMounted(() => {
   overflow: auto;
   height: 200px;
   margin-bottom: 5px;
-  border: 1px solid var(--border-color-base);
+  border: 1px solid v-bind('theme.borderColor');
 
   :deep {
     .cm-editor {

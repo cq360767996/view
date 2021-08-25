@@ -39,6 +39,7 @@ import {
 } from '@ant-design/icons-vue';
 import { reactive, onMounted, shallowRef } from 'vue';
 import { menu } from '@/hooks';
+import { useThemeVars } from 'naive-ui';
 
 const props = defineProps({
   menuType: {
@@ -47,6 +48,9 @@ const props = defineProps({
   },
   container: Object as PropType<HTMLElement>,
 });
+
+const theme = useThemeVars();
+console.log(theme.value);
 
 const store = useStore();
 
@@ -149,12 +153,12 @@ onMounted(() => {
 .board-menu {
   position: absolute;
   z-index: 2;
-  color: var(--text-color);
+  color: v-bind('theme.textColor2');
 
   ul {
-    background-color: var(--component-bg);
+    background-color: v-bind('theme.railColor');
     border-radius: 5px;
-    box-shadow: var(--box-shadow-base);
+    box-shadow: v-bind('theme.boxShadow1');
     padding: 5px 0;
   }
 
@@ -165,13 +169,13 @@ onMounted(() => {
     padding-right: 3em;
 
     &:hover {
-      background-color: var(--primary-color);
-      color: var(--text-color-inverse);
+      background-color: v-bind('theme.primaryColor');
+      color: v-bind('theme.textColor2');
     }
 
     &:nth-child(4),
     &:nth-child(8) {
-      border-bottom: 1px solid var(--border-color-base);
+      border-bottom: 1px solid v-bind('theme.borderColor');
     }
 
     &.--disable {
@@ -179,8 +183,8 @@ onMounted(() => {
       opacity: 0.3;
 
       &:hover {
-        color: var(--text-color);
-        background-color: var(--item-hover-bg);
+        color: v-bind('theme.textColor2');
+        background-color: v-bind('theme.hoverColor');
       }
     }
   }

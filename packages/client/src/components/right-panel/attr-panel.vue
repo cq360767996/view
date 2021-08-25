@@ -1,43 +1,41 @@
 <template>
-  <Form
-    label-align="right"
-    :label-col="{ span: 5, offset: 2 }"
-    :wrapper-col="{ span: 16, offset: 1 }"
-  >
-    <FormItem label="名称">
-      <Col span="16">
-        <Input v-model:value="curComponent.label" size="small" />
-      </Col>
-    </FormItem>
+  <NForm label-placement="left" :label-width="80">
+    <NFormItem label="名称">
+      <NRow>
+        <NCol span="16">
+          <NInput v-model:value="curComponent.label" size="small" />
+        </NCol>
+      </NRow>
+    </NFormItem>
     <Item
       v-for="field in basicField"
       :key="field.label"
       :field="field"
       :model="curComponent.style"
     />
-    <FormItem label="旋转角度">
-      <Row>
-        <Col span="10">
-          <InputNumber v-model:value="curComponent.style.rotate" :precision="0" size="small" />
-        </Col>
-        <Col span="3" offset="2">
-          <Button size="small" @click="rotate(true)">
+    <NFormItem label="旋转角度">
+      <NRow>
+        <NCol span="10">
+          <NInputNumber v-model:value="curComponent.style.rotate" :precision="0" size="small" />
+        </NCol>
+        <NCol span="3" offset="2">
+          <NButton size="small" @click="rotate(true)">
             <template #icon>
               <RotateLeftOutlined />
             </template>
-          </Button>
-        </Col>
-        <Col span="3">
-          <Button size="small" @click="rotate()">
+          </NButton>
+        </NCol>
+        <NCol span="3">
+          <NButton size="small" @click="rotate()">
             <template #icon>
               <RotateRightOutlined />
             </template>
-          </Button>
-        </Col>
-      </Row>
-    </FormItem>
-    <Collapse v-model:activeKey="activeKey" expand-icon-position="right" size="small">
-      <CollapsePanel
+          </NButton>
+        </NCol>
+      </NRow>
+    </NFormItem>
+    <NCollapse v-model:activeKey="activeKey" expand-icon-position="right" size="small">
+      <NCollapseItem
         v-for="item in schema"
         :key="item.title"
         :title="item.title"
@@ -49,8 +47,8 @@
           :field="field"
           :model="curComponent.style"
         />
-      </CollapsePanel>
-      <CollapsePanel
+      </NCollapseItem>
+      <NCollapseItem
         v-for="item in gallery?.attr"
         :key="item.title"
         :title="item.title"
@@ -62,9 +60,9 @@
           :field="field"
           :model="curComponent.propsData"
         />
-      </CollapsePanel>
-    </Collapse>
-  </Form>
+      </NCollapseItem>
+    </NCollapse>
+  </NForm>
 </template>
 
 <script lang="ts" setup>
@@ -82,16 +80,16 @@ import { FormEnum } from '@/enum';
 import Item from '@/components/form-generator/form-item.vue';
 import { getGallery } from '@/gallery';
 import {
-  Form,
-  FormItem,
-  Col,
-  Row,
-  Collapse,
-  CollapsePanel,
-  Input,
-  InputNumber,
-  Button,
-} from 'ant-design-vue';
+  NForm,
+  NFormItem,
+  NCol,
+  NRow,
+  NCollapse,
+  NCollapseItem,
+  NInput,
+  NInputNumber,
+  NButton,
+} from 'naive-ui';
 
 const store = useStore();
 const { board } = store.state;

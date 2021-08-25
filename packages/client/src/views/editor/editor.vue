@@ -3,27 +3,30 @@
     <img width="40" height="40" src="/src/assets/img/logo.svg" @click="$router.push('/')" />
     <div class="header__wrapper">
       <div class="header__panel-box">
-        <Button
+        <NButton
           v-for="item in panelStatus"
           :key="item.key"
           class="header__button"
-          size="small"
+          size="tiny"
           :type="item.checked ? 'primary' : 'default'"
           @click="switchPanelShow(item.key)"
         >
           <template #icon>
             <component :is="item.icon" />
           </template>
-        </Button>
+        </NButton>
       </div>
       <div class="header__publish">
-        <Tooltip v-for="item in buttonGroup" :key="item.name" :title="item.name" placement="bottom">
-          <Button class="header__button" size="small" @click="item.event()">
-            <template #icon>
-              <component :is="item.icon" />
-            </template>
-          </Button>
-        </Tooltip>
+        <NTooltip v-for="item in buttonGroup" :key="item.name" placement="bottom">
+          {{ item.name }}
+          <template #trigger>
+            <NButton class="header__button" size="tiny" @click="item.event()">
+              <template #icon>
+                <component :is="item.icon" />
+              </template>
+            </NButton>
+          </template>
+        </NTooltip>
       </div>
     </div>
 
@@ -54,7 +57,7 @@ import type { Component } from 'vue';
 import { on, changeTheme } from '@/utils';
 import { useStore, SnapshotEnum, BoardEnum } from '@/store';
 import { pageConfig, updateCachePage, savePage, isModified, panel } from '@/hooks';
-import { computed, createVNode, onBeforeUnmount, onMounted, ref } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
 import { Board, BoardPreview, RightPanel, LayerPanel, ComponentPanel } from '@/components';
 import {
   FileDoneOutlined,
@@ -68,16 +71,18 @@ import {
   SendOutlined,
   DesktopOutlined,
   SkinOutlined,
-  ExclamationCircleOutlined,
 } from '@ant-design/icons-vue';
 import { useRouter, onBeforeRouteLeave } from 'vue-router';
 import { getPage } from '@/api';
 import { cloneDeep } from 'lodash';
-import { Modal, Button, Tooltip } from 'ant-design-vue';
+import { NButton, NTooltip, useDialog, useThemeVars } from 'naive-ui';
 
 const props = defineProps({ id: { type: String, default: () => '' } });
 const store = useStore();
 const router = useRouter();
+const dialog = useDialog();
+const theme = useThemeVars();
+console.log(theme.value);
 
 const modalOpen = ref(false);
 let letgo = false;
@@ -155,15 +160,14 @@ onBeforeRouteLeave((to, from) => {
   const modified = isModified(store);
 
   if (!letgo && modified) {
-    Modal.confirm({
+    dialog.warning({
       title: '警告',
       content: '系统可能不会保存您所做的更改，是否离开？',
-      icon: createVNode(ExclamationCircleOutlined),
-      onOk() {
+      onPositiveClick: () => {
         letgo = true;
         router.push(to);
       },
-      onCancel() {
+      onNegativeClick: () => {
         letgo = false;
         router.push(from);
       },
@@ -177,7 +181,7 @@ onBeforeRouteLeave((to, from) => {
 <style lang="less">
 .header {
   height: 41px;
-  border-bottom: 1px solid var(--border-color-base);
+  border-bottom: 1px solid v-bind('theme.borderColor');
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -185,7 +189,7 @@ onBeforeRouteLeave((to, from) => {
   padding: 0 20px;
   position: relative;
   z-index: 100;
-  background-color: var(--body-bg);
+  background-color: v-bind('theme.cardColor');
 
   img {
     cursor: pointer;
@@ -229,7 +233,7 @@ onBeforeRouteLeave((to, from) => {
 .mid-panel {
   flex: 1;
   height: 100%;
-  background-color: var(--component-bg);
+  background-color: v-bind('theme.railColor');
   box-sizing: border-box;
   overflow: hidden;
 
@@ -240,9 +244,9 @@ onBeforeRouteLeave((to, from) => {
     align-items: center;
     box-sizing: border-box;
     padding-left: 30px;
-    border-bottom: 1px solid var(--border-color-base);
+    border-bottom: 1px solid v-bind('theme.borderColor');
     z-index: 10;
-    background-color: var(--body-bg);
+    background-color: v-bind('theme.cardColor');
   }
 
   &__wrapper {
